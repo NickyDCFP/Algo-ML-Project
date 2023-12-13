@@ -31,7 +31,7 @@ args = vars(parser.parse_args())
 args['learning_rate']   = 0.001 if args['dataset'] == 'mnist' else 0.0001
 args['batch_size']      = 256   if args['dataset'] == 'mnist' else 128
 args['patience']        = 50    if args['dataset'] == 'mnist' else 100
-args['epochs']          = 250   if args['dataset'] == 'mnist' else 10
+args['epochs']          = 250   if args['dataset'] == 'mnist' else 500
 
 MODEL_FOLDER = 'SavedModels/'
 model_save_path = MODEL_FOLDER + args['save_filename']
