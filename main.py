@@ -22,12 +22,20 @@ parser.add_argument('--model',type=str, default='cnn', choices=['cnn', 'fcn'])
 parser.add_argument('--vcp', type=float, default=0., help='Variable Connection Probability')
 parser.add_argument('--aug', type=float, default=0., help='Translational Augmentation Probability')
 parser.add_argument('--aug_type', default='translation', help='Type of Augmentation for training')
+parser.add_argument('--save_type', type=str, default='all', choices=['none', 'all', 'json'])
+parser.add_argument('--save_filename', type=str, default='model')
+parser.add_argument('--load_type', type=str, default='none', choices=['none', 'all', 'json'])
+parser.add_argument('--load_filename', type=str, default='model')
 args = vars(parser.parse_args())
 
 args['learning_rate']   = 0.001 if args['dataset'] == 'mnist' else 0.0001
 args['batch_size']      = 256   if args['dataset'] == 'mnist' else 128
 args['patience']        = 50    if args['dataset'] == 'mnist' else 100
-args['epochs']          = 250   if args['dataset'] == 'mnist' else 500
+args['epochs']          = 250   if args['dataset'] == 'mnist' else 10
+
+MODEL_FOLDER = 'SavedModels/'
+model_save_path = MODEL_FOLDER + args['save_filename']
+model_load_path = MODEL_FOLDER + args['load_filename']
 
 if args['split_for_cifar'] == 4:
     args['epochs'] = 1000
@@ -59,10 +67,15 @@ train_size = int(0.8 * len(data))
 x_train, x_test = data[:train_size], data[train_size:]
 y_train, y_test = targets[:train_size], targets[train_size:]
 
-model = Model(args)
+if args['load_type'] == 'none':
+    model = Model(args)
+else:
+    model = tf.keras.models.load_model(model_load_path)
 history = model.fit(x_train, y_train, x_test, y_test)
-
+if args['save_type'] != 'none':
+    model.save_model(model_save_path)
 del model
+
 
 lines = ''
 for epoch in range(len(history['accuracy'])):

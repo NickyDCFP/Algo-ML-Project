@@ -1,5 +1,5 @@
 from keras.optimizers import Adam
-from keras.models import load_model
+from keras.models import load_model, model_from_json
 from keras.models import Sequential
 from keras.layers import Dense, Flatten, Conv2D
 from keras.layers import LocallyConnected2D
