@@ -1,5 +1,6 @@
 # Weight Sharing Research Project
-> Project for [Algorithmic Machine Learning and Data Science](https://www.chrismusco.com/amlds2023/) with Professor Musco
+> Project for [Algorithmic Machine Learning and Data Science](https://www.chrismusco.com/amlds2023/) with Professor Christopher Musco
+> Makes heavy use of code from [Learning in The Machine: To Share or Not to Share?](https://github.com/jordanott/WeightSharing)
 
 
 ## To do
