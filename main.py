@@ -34,8 +34,8 @@ args['patience']        = 50    if args['dataset'] == 'mnist' else 100
 args['epochs']          = 250   if args['dataset'] == 'mnist' else 500
 
 MODEL_FOLDER = 'SavedModels/'
-model_save_path = MODEL_FOLDER + args['save_filename']
-model_load_path = MODEL_FOLDER + args['load_filename']
+args['save_filename'] = MODEL_FOLDER + args['save_filename']
+args['load_filename'] = MODEL_FOLDER + args['load_filename']
 
 if args['split_for_cifar'] == 4:
     args['epochs'] = 1000
@@ -70,10 +70,12 @@ y_train, y_test = targets[:train_size], targets[train_size:]
 if args['load_type'] == 'none':
     model = Model(args)
 else:
-    model = tf.keras.models.load_model(model_load_path)
+    model = Model(args, args['load_filename'])
+
 history = model.fit(x_train, y_train, x_test, y_test)
 if args['save_type'] != 'none':
-    model.save_model(model_save_path)
+    model.save_model(args['save_filename'])
+    
 del model
 
 

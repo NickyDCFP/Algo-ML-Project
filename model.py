@@ -13,9 +13,8 @@ from Custom.measure_distance import MeasureDistance
 class Model:
     def __init__(self, args, file_name=None):
         self.args = args
-
         if file_name is not None:
-            self._load_model(file_name)
+            self._load_model(file_name, args['load_type'])
         else:
             self._build_model()
 
@@ -150,10 +149,10 @@ class Model:
 
     def _load_model(self, file_name, load_type='json'):
         if load_type == 'json':
-            with open('model.json', 'r') as json_file:
+            with open(f'{self.args["load_filename"]}.json', 'r') as json_file:
                 loaded_model = model_from_json(json_file.read())
         elif load_type == 'all':
-            self.model = load_model(file_name)
+            self.model = load_model(f'{self.args["load_filename"]}.h5')
 
     def save_model(self, file_name):
         if self.args['save_type'] == 'json':
