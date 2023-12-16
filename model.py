@@ -23,6 +23,10 @@ class Model:
             EarlyStopping(monitor='val_accuracy', min_delta=0, patience=self.args['patience'], verbose=0, mode='auto')
         )
 
+        if self.args['model'] == 'fcn' and self.args['vcp'] == 0:
+            measure_dist = MeasureDistance()
+            callbacks.append(measure_dist)
+
         # training
         history = self.model.fit(
             x_train, y_train,
@@ -33,6 +37,13 @@ class Model:
             verbose=2
         )
 
+        
+        # add filter distance measurement results
+        if self.args['model'] == 'fcn' and self.args['vcp'] == 0:
+            for k in measure_dist.results.keys(): measure_dist.results[k] = measure_dist.results[k][:-1]
+            history.history.update(measure_dist.results)
+
+            
         return history.history
 
     def fit_generator(self, x_train, y_train, x_test, y_test, callbacks=[]):
