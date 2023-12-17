@@ -35,48 +35,48 @@ class ValidationGeneration(keras.callbacks.Callback):
 
     def on_epoch_end(self, epoch, logs={}):
         # translation
-        results = self.model.evaluate_generator(
+        results = self.model.evaluate(
             self.translation.flow(self.data, self.label, batch_size=self.args['batch_size']),
-            len(self.data) // self.args['batch_size']
+            steps=len(self.data) // self.args['batch_size']
         );
         self.metrics['translation'].append(results[1])
 
         # noise
-        results = self.model.evaluate_generator(
+        results = self.model.evaluate(
             noise_generator(
                 self.data, self.label,
                 noise_level=.15,
                 batch_size=self.args['batch_size']
             ),
-            len(self.data) // self.args['batch_size']
+            steps=len(self.data) // self.args['batch_size']
         );
         self.metrics['noise'].append(results[1])
 
         # rotation
-        results = self.model.evaluate_generator(
+        results = self.model.evaluate(
             self.rotation.flow(self.data, self.label,batch_size=self.args['batch_size']),
-            len(self.data) // self.args['batch_size']
+            steps=len(self.data) // self.args['batch_size']
         );
         self.metrics['rotation'].append(results[1])
 
         # noise
-        results = self.model.evaluate_generator(
+        results = self.model.evaluate(
             edge_noise_generator(
                 self.data, self.label,
                 noise_level=.15,
                 batch_size=self.args['batch_size']
             ),
-            len(self.data) // self.args['batch_size']
+            steps=len(self.data) // self.args['batch_size']
         );
         self.metrics['edge_noise'].append(results[1])
 
         # swap
-        results = self.model.evaluate_generator(
+        results = self.model.evaluate(
             swap_generator(
                 self.data, self.label,
                 batch_size=self.args['batch_size']
             ),
-            len(self.data) // self.args['batch_size']
+            steps=len(self.data) // self.args['batch_size']
         );
         self.metrics['swap'].append(results[1])
         return
