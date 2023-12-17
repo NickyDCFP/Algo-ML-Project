@@ -9,7 +9,7 @@ def swap_generator(x_train, y_train, batch_size=64):
             # get batch of data
             x, y = x_train[i:i + batch_size], y_train[i:i + batch_size]
             tmp_x = deepcopy(x)
-            hw = x.shape[1] / 2
+            hw = x.shape[1] // 2
 
             tmp_x[:, :hw, -hw:] = x[:, -hw:, :hw]
             tmp_x[:, -hw:, :hw] = x[:, :hw, -hw:]

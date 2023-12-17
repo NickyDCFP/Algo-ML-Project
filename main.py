@@ -26,12 +26,14 @@ parser.add_argument('--save_type', type=str, default='all', choices=['none', 'al
 parser.add_argument('--save_filename', type=str, default='model')
 parser.add_argument('--load_type', type=str, default='none', choices=['none', 'all', 'json'])
 parser.add_argument('--load_filename', type=str, default='model')
+parser.add_argument('--epochs', type=int, default=-1)
 args = vars(parser.parse_args())
 
 args['learning_rate']   = 0.001 if args['dataset'] == 'mnist' else 0.0001
 args['batch_size']      = 256   if args['dataset'] == 'mnist' else 128
 args['patience']        = 50    if args['dataset'] == 'mnist' else 100
-args['epochs']          = 250   if args['dataset'] == 'mnist' else 500
+if args['epochs'] == -1:
+    args['epochs']          = 250   if args['dataset'] == 'mnist' else 500
 
 MODEL_FOLDER = 'SavedModels/'
 args['save_filename'] = MODEL_FOLDER + args['save_filename']

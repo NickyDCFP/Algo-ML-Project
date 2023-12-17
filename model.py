@@ -22,6 +22,8 @@ class Model:
         callbacks.append(
             EarlyStopping(monitor='val_accuracy', min_delta=0, patience=self.args['patience'], verbose=0, mode='auto')
         )
+        if self.args['aug'] != 0:
+            val_gen = ValidationGeneration(x_test,y_test,self.args); callbacks.append(val_gen)
 
         if self.args['model'] == 'fcn' and self.args['vcp'] == 0:
             measure_dist = MeasureDistance()
@@ -29,45 +31,16 @@ class Model:
 
         # training
         history = self.model.fit(
-            x_train, y_train,
-            epochs=self.args['epochs'],
-            validation_data=(x_test, y_test),
-            batch_size=self.args['batch_size'],
-            callbacks=callbacks,
-            verbose=2
-        )
-
-        
-        # add filter distance measurement results
-        if self.args['model'] == 'fcn' and self.args['vcp'] == 0:
-            for k in measure_dist.results.keys(): measure_dist.results[k] = measure_dist.results[k][:-1]
-            history.history.update(measure_dist.results)
-
-            
-        return history.history
-
-    def fit_generator(self, x_train, y_train, x_test, y_test, callbacks=[]):
-        callbacks.append(
-            EarlyStopping(monitor='val_accuracy', min_delta=0, patience=self.args['patience'], verbose=0, mode='auto')
-        )
-
-        val_gen = ValidationGeneration(x_test,y_test,self.args); callbacks.append(val_gen)
-
-        if self.args['model'] == 'fcn' and self.args['vcp'] == 0:
-            measure_dist = MeasureDistance()
-            callbacks.append(measure_dist)
-
-        # training
-        history = self.model.fit_generator(
             get_generator(x_train, y_train, self.args),
             steps_per_epoch=x_train.shape[0] // self.args['batch_size'],
             epochs=self.args['epochs'],
             validation_data=(x_test, y_test),
             callbacks=callbacks,
-            # verbose=0
+            verbose=2
         )
         # store results from augmenting the validation set
-        history.history.update(val_gen.metrics)
+        if self.args['aug'] != 0:
+            history.history.update(val_gen.metrics)
 
         # add filter distance measurement results
         if self.args['model'] == 'fcn' and self.args['vcp'] == 0:
@@ -75,6 +48,7 @@ class Model:
             history.history.update(measure_dist.results)
 
         return history.history
+
 
     def _build_model(self):
         if self.args['dataset'] == 'mnist':
