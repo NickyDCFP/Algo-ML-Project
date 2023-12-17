@@ -33,7 +33,7 @@ args['learning_rate']   = 0.001 if args['dataset'] == 'mnist' else 0.0001
 args['batch_size']      = 256   if args['dataset'] == 'mnist' else 128
 args['patience']        = 50    if args['dataset'] == 'mnist' else 100
 if args['epochs'] == -1:
-    args['epochs']          = 250   if args['dataset'] == 'mnist' else 500
+    args['epochs']      = 250   if args['dataset'] == 'mnist' else 500
 
 MODEL_FOLDER = 'SavedModels/'
 args['save_filename'] = MODEL_FOLDER + args['save_filename']
